@@ -17,7 +17,7 @@ class VotePlugin(plugin.TelexPlugin):
 
     patterns = {
         "^{prefix}vote (yes|no)$": "vote",
-        "^{prefix}callvote (.+)\s*(\d\d)*$": "call_vote",
+        "^{prefix}callvote (.+) (\d+)$": "call_vote",
     }
 
     usage = [
@@ -47,9 +47,7 @@ class VotePlugin(plugin.TelexPlugin):
         if not self.vote_in_progress:
             self.vote_in_progress = True
             vote_msg = matches.group(1)
-            countdown_time = 30
-            if matches.group(2):
-                countdown_time = matches.group(2)
+            countdown_time = int(matches.group(2)) or 30
             if countdown_time > 600:
                 countdown_time = 600
 
