@@ -3,6 +3,7 @@
 Call a vote in the chat
 
 ### Usage:
-To do stuff:
+To vote or call a vote:
 
-    !do stuff
+    !vote yes|no
+    !callvote sushi for lunch? 600 
