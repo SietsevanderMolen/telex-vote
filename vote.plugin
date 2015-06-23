@@ -1,0 +1,9 @@
+[Core]
+Name = Vote
+Module = vote
+
+[Documentation]
+Author = Sietse van der Molen
+Version = 1.0
+Website = https://github.com/SietsevanderMolen/telex-vote
+Description = Call a vote in the chat

@@ -1,0 +1,9 @@
+{
+    "name": "Vote",
+    "description": "Call a vote in the chat",
+    "version": "1.0",
+    "default_enable": ["Vote"],
+    "homepage": "https://github.com/SietsevanderMolen/telex-vote",
+    "repo": "https://github.com/SietsevanderMolen/telex-vote.git",
+    "branch": "master"
+}
