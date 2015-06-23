@@ -47,7 +47,9 @@ class VotePlugin(plugin.TelexPlugin):
         if not self.vote_in_progress:
             self.vote_in_progress = True
             vote_msg = matches.group(1)
-            countdown_time = int(matches.group(2)) or 30
+            countdown_time = 30
+            if matches.group(2):
+                countdown_time = int(matches.group(2))
             if countdown_time > 600:
                 countdown_time = 600
 
