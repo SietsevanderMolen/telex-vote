@@ -12,16 +12,19 @@ class VotePlugin(plugin.TelexPlugin):
     """
 
     vote_in_progress = False
+    vote_msg = ""
     votes_yes = set()
     votes_no = set()
 
     patterns = {
         "^{prefix}vote (yes|no)$": "vote",
+        "^{prefix}vote info$": "vote_info",
         "^{prefix}callvote (.+) (\d+)$": "call_vote",
     }
 
     usage = [
-        "{prefix}vote (yes|no): vote yes or no",
+        "{prefix}vote yes|no: vote yes or no",
+        "{prefix}vote info: get info on current vote",
         "{prefix}callvote kick lolke 20: call for a vote, with specified seconds timeout",
     ]
 
@@ -46,7 +49,7 @@ class VotePlugin(plugin.TelexPlugin):
 
         if not self.vote_in_progress:
             self.vote_in_progress = True
-            vote_msg = matches.group(1)
+            self.vote_msg = matches.group(1)
             countdown_time = 30
             if matches.group(2):
                 countdown_time = int(matches.group(2))
@@ -55,9 +58,17 @@ class VotePlugin(plugin.TelexPlugin):
 
             self.timer = threading.Timer(countdown_time, self.close_vote, args=[msg, matches])
             self.timer.start()
-            peer.send_msg("VOTE NOW: {}".format(vote_msg), preview=False)
+            peer.send_msg("VOTE NOW: {}".format(self.vote_msg), preview=False)
         else:
             peer.send_msg("Vote already in progress", reply=msg.id, preview=False)
+
+    def vote_info(self, msg, matches):
+        peer = self.bot.get_peer_to_send(msg)
+        if self.vote_in_progress:
+            peer.send_msg("Voting for:\n{}\n{} voted yes\n{} voted no".format(self.vote_msg,
+                len(self.votes_yes), len(self.votes_no)), reply=msg.id, preview=False)
+        else:
+            peer.send_msg("No vote in progress", reply=msg.id, preview=False)
 
     def close_vote(self, msg, matches):
         peer = self.bot.get_peer_to_send(msg)
@@ -65,8 +76,8 @@ class VotePlugin(plugin.TelexPlugin):
             len(self.votes_yes), len(self.votes_no)), reply=msg.id, preview=False)
         self.reset_votes();
 
-
     def reset_votes(self):
         self.votes_yes = set()
         self.votes_no = set()
+        self.vote_msg = ""
         self.vote_in_progress = False
